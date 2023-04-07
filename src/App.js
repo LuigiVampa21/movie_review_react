@@ -6,7 +6,8 @@ import Layout from './components/Layout';
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home/Home';
 import Header from './components/Header/Header';
-import Trailer from './components/trailer/Trailer';
+import Trailer from './components/Trailer/Trailer';
+import Review from './components/Review/Review';
 
 
 
@@ -14,15 +15,30 @@ import Trailer from './components/trailer/Trailer';
 function App() {
 
   const [movies, setMovies] = useState([]);
+  const [movie, setMovie] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   const getMovies = async () => {
     try {
-      const response = await axios.get(process.env.REACT_APP_API_URL);
-      console.log(response);
+      const response = await axios.get(process.env.REACT_APP_API_URL + '/movies');
+      // console.log(response);
       const { data } = response;
       setMovies([...data])
       console.log(movies);
     } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const getMovieData = async(id) => {
+    try{
+      const response = await axios.get(process.env.REACT_APP_API_URL + '/movies/' + id );
+      const { data } = response;
+      setMovie(data);
+      console.log(movie);
+      const reviewsArray = [...movie.reviewIds];
+      setReviews([...reviewsArray]);
+    }catch(err){
       console.log(err);
     }
   }
@@ -37,9 +53,9 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Home movies={movies} />} />
-          {/* <Route path="/trailer/:ytTrailerId" element={<Trailer/>}></Route> */}
-          <Route path="/Trailer" element={<Trailer/>} />
+          <Route path="/" element={<Home movies={movies} />} /> 
+          <Route path="/trailer/:id" element={<Trailer/>}></Route>
+          <Route path="/reviews/:id" element={<Review getMovieData={getMovieData} movie={movie} reviews={reviews} setReviews={setReviews} />}></Route>
         </Route>
       </Routes>
     </div>

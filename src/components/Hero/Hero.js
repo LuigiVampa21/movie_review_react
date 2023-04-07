@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Hero.css';
 
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 
 
 const Hero = ({ movies }) => {
+
+    const navigate = useNavigate();
+
+    const navToReviews = (id) => {
+            navigate("/reviews/" + id);
+    }
+
+
     return (
         <div className='movie-carousel-container'>
             <Carousel>
@@ -26,12 +35,14 @@ const Hero = ({ movies }) => {
                                             <h4>{movie.title}</h4>
                                         </div>
                                         <div className="movie-buttons-container">
-                                            {/* <Link to={"/Trailer/" + movie.trailerLink.substring(movie.trailerLink.length - 11)}> */}
-                                            <Link to="Trailer">
+                                            <Link to={"/trailer/" + movie.trailerLink.substring(movie.trailerLink.length - 11)}>
                                                 <div className="play-button-icon-container">
                                                     <FontAwesomeIcon className='play-button-icon' icon={faCirclePlay} />
                                                 </div>
                                             </Link>
+                                            <div className="movie-review-button-container">
+                                                <Button onClick={() => navToReviews(movie.imdbId)}>Reviews</Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
